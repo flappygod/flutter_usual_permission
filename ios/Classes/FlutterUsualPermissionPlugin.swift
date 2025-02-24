@@ -30,7 +30,8 @@ public class FlutterUsualPermissionPlugin: NSObject, FlutterPlugin, CLLocationMa
                 result(FlutterError(code: "INVALID_ARGUMENT", message: "Missing or invalid arguments", details: nil))
                 return
             }
-            checkPermission(type: type, result: result)
+            let request = args["request"] as? Bool ?? false
+            checkPermission(type: type, request: request, result: result)
         case "requestPermission":
             // 请求权限
             guard let args = call.arguments as? [String: Any],
@@ -48,33 +49,78 @@ public class FlutterUsualPermissionPlugin: NSObject, FlutterPlugin, CLLocationMa
     }
 
     // MARK: - 权限检查
-    private func checkPermission(type: Int, result: @escaping FlutterResult) {
+    private func checkPermission(type: Int, request: Bool, result: @escaping FlutterResult) {
         switch type {
         case 0:
             // 通知权限
             UNUserNotificationCenter.current().getNotificationSettings { settings in
-                result(settings.authorizationStatus == .authorized ? "1" : "0")
+                if settings.authorizationStatus == .authorized {
+                    result("1")
+                } else if request {
+                    self.requestNotificationPermission(result: result)
+                } else {
+                    result("0")
+                }
             }
         case 1:
             // 相机权限
             let status = AVCaptureDevice.authorizationStatus(for: .video)
-            result(status == .authorized ? "1" : "0")
+            if status == .authorized {
+                result("1")
+            } else if request {
+                AVCaptureDevice.requestAccess(for: .video) { granted in
+                    result(granted ? "1" : "0")
+                }
+            } else {
+                result("0")
+            }
         case 2:
             // 存储权限
             let status = PHPhotoLibrary.authorizationStatus()
-            result(status == .authorized ? "1" : "0")
+            if status == .authorized {
+                result("1")
+            } else if request {
+                PHPhotoLibrary.requestAuthorization { newStatus in
+                    result(newStatus == .authorized ? "1" : "0")
+                }
+            } else {
+                result("0")
+            }
         case 3:
             // 日历权限
             let status = EKEventStore.authorizationStatus(for: .event)
-            result(status == .authorized ? "1" : "0")
+            if status == .authorized {
+                result("1")
+            } else if request {
+                let eventStore = EKEventStore()
+                eventStore.requestAccess(to: .event) { granted, _ in
+                    result(granted ? "1" : "0")
+                }
+            } else {
+                result("0")
+            }
         case 4:
             // 麦克风权限
             let status = AVAudioSession.sharedInstance().recordPermission
-            result(status == .granted ? "1" : "0")
+            if status == .granted {
+                result("1")
+            } else if request {
+                AVAudioSession.sharedInstance().requestRecordPermission { granted in
+                    result(granted ? "1" : "0")
+                }
+            } else {
+                result("0")
+            }
         case 5:
             // 定位权限
             let status = CLLocationManager.authorizationStatus()
-            result((status == .authorizedAlways || status == .authorizedWhenInUse) ? "1" : "0")
+            if status == .authorizedAlways || status == .authorizedWhenInUse {
+                result("1")
+            } else if request {
+                requestLocationPermission(result: result)
+            } else {
+                result("0")
+            }
         case 6:
             // 拨打电话权限（iOS 不需要拨打电话权限，直接返回 "1"）
             result("1")

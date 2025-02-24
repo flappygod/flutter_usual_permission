@@ -44,9 +44,12 @@ String getPermissionType(PermissionType type) {
 ///this package is used to check and request permissions
 class FlutterUsualPermission {
   ///check  permission
-  static Future<bool> checkPermission(PermissionType permissionType) {
-    return FlutterUsualPermissionPlatform.instance
-        .checkPermission(permissionType);
+  static Future<bool> checkPermission(PermissionType permissionType,
+      {bool request = false}) {
+    return FlutterUsualPermissionPlatform.instance.checkPermission(
+      permissionType,
+      request: request,
+    );
   }
 
   ///request permission

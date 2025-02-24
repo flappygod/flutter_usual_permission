@@ -25,7 +25,8 @@ abstract class FlutterUsualPermissionPlatform extends PlatformInterface {
   }
 
   ///check  permission
-  Future<bool> checkPermission(PermissionType permissionType) {
+  Future<bool> checkPermission(PermissionType permissionType,
+      {bool request = false}) {
     throw UnimplementedError('checkPermission() has not been implemented.');
   }
 

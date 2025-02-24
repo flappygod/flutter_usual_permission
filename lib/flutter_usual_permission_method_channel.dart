@@ -11,9 +11,11 @@ class MethodChannelFlutterUsualPermission
   final methodChannel = const MethodChannel('flutter_usual_permission');
 
   @override
-  Future<bool> checkPermission(PermissionType permissionType) async {
+  Future<bool> checkPermission(PermissionType permissionType,
+      {bool request = false}) async {
     final String? ret = await methodChannel.invokeMethod('checkPermission', {
       "type": getPermissionType(permissionType),
+      "request": request,
     });
     if (ret == "1") {
       return true;

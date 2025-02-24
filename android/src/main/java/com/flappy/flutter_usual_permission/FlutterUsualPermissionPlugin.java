@@ -124,6 +124,8 @@ public class FlutterUsualPermissionPlugin implements FlutterPlugin, ActivityAwar
     private void handleCheckPermission(MethodCall call, MethodChannel.Result result) {
         // 获取权限类型
         Integer type = call.argument("type");
+        // 是否需要请求权限
+        Boolean request = call.argument("request");
         if (type == null) {
             result.error("INVALID_ARGUMENT", "Type argument is missing or invalid", null);
             return;
@@ -139,10 +141,22 @@ public class FlutterUsualPermissionPlugin implements FlutterPlugin, ActivityAwar
         // 如果是特殊权限（如通知权限），直接检查
         if (permissions.isEmpty()) {
             boolean isGranted = checkSpecialPermission(type);
-            result.success(isGranted ? "1" : "0");
+            if (!isGranted && Boolean.TRUE.equals(request)) {
+                // 如果未授予权限且需要请求权限
+                handleRequestPermission(call, result);
+            } else {
+                result.success(isGranted ? "1" : "0");
+            }
         } else {
             // 普通权限，逐一检查
-            checkPermission(permissions, flag -> result.success(flag ? "1" : "0"));
+            checkPermission(permissions, granted -> {
+                if (!granted && Boolean.TRUE.equals(request)) {
+                    // 如果未授予权限且需要请求权限
+                    requestPermission(permissions, grantedResult -> result.success(grantedResult ? "1" : "0"));
+                } else {
+                    result.success(granted ? "1" : "0");
+                }
+            });
         }
     }
 
