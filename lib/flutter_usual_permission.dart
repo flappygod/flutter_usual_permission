@@ -12,7 +12,7 @@ enum PermissionType {
 }
 
 //get permission type
-String getPermissionType(PermissionType type) {
+int getPermissionType(PermissionType type) {
   int permissionType = 0;
   switch (type) {
     case PermissionType.notification:
@@ -37,7 +37,7 @@ String getPermissionType(PermissionType type) {
       permissionType = 6;
       break;
   }
-  return permissionType.toString();
+  return permissionType;
 }
 
 ///check  permission
