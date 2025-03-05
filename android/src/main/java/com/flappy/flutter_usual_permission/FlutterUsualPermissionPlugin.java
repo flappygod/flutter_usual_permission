@@ -231,6 +231,7 @@ public class FlutterUsualPermissionPlugin implements FlutterPlugin, ActivityAwar
                     permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
                     permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
                 } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                     permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
                 } else {
                     permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
