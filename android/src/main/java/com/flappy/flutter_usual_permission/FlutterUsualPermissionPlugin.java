@@ -248,9 +248,6 @@ public class FlutterUsualPermissionPlugin implements FlutterPlugin, ActivityAwar
                 // 定位权限
                 permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
                 permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-                }
                 break;
             case 6:
                 // 拨打电话权限
