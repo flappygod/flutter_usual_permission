@@ -1,3 +1,3 @@
-## 1.0.1
+## 1.0.2
 
-* Add all permissions to AndroidManifest.xml.
+* Remove background location permission.

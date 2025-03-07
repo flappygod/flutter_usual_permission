@@ -1,7 +1,7 @@
 name: flutter_usual_permission
 description: "A Flutter plugin for managing permissions on Android and iOS, including notifications, 
   camera, storage, microphone, location, calendar, and phone call permissions."
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/flappygod/flutter_usual_permission.git
 
 environment:
