@@ -24,7 +24,7 @@ apply plugin: "com.android.library"
 android {
     namespace = "com.flappy.flutter_usual_permission"
 
-    compileSdk = 35
+    compileSdk = 34
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
